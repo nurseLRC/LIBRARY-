@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>วารสารทางการพยาบาล</title>
+  <style>
+    :root {
+      --bg: linear-gradient(180deg, #fbf8ff 0%, #f3eaff 52%, #f9f4ff 100%);
+      --panel: rgba(255, 255, 255, 0.9);
+      --panel-strong: #ffffff;
+      --primary: #8d63d2;
+      --primary-deep: #6f42c1;
+      --primary-soft: #efe4ff;
+      --text: #40256e;
+      --muted: #7a62a6;
+      --border: rgba(141, 99, 210, 0.18);
+      --shadow: 0 18px 40px rgba(111, 66, 193, 0.14);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .page {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 28px 20px 40px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(243,232,255,0.96));
+      border: 1px solid var(--border);
+      border-radius: 32px;
+      padding: 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(170, 126, 255, 0.25), transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero::before {
+      width: 220px;
+      height: 220px;
+      right: -70px;
+      top: -80px;
+    }
+
+    .hero::after {
+      width: 180px;
+      height: 180px;
+      left: -50px;
+      bottom: -70px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.5rem, 2vw, 2.2rem);
+      line-height: 1.2;
+      position: relative;
+      z-index: 1;
+    }
+
+    .subtitle {
+      margin: 0;
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      margin-top: 22px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .filter-btn {
+      border: 1px solid rgba(141, 99, 210, 0.22);
+      background: rgba(255, 255, 255, 0.86);
+      color: var(--primary-deep);
+      border-radius: 999px;
+      padding: 10px 16px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .filter-btn:hover {
+      border-color: rgba(111, 66, 193, 0.38);
+      transform: translateY(-1px);
+    }
+
+    .filter-btn.is-active {
+      background: linear-gradient(135deg, var(--primary), var(--primary-deep));
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 12px 24px rgba(111, 66, 193, 0.18);
+    }
+
+    .search-wrap {
+      flex: 1 1 320px;
+      position: relative;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      border: 1px solid rgba(141, 99, 210, 0.22);
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 18px;
+      padding: 14px 16px 14px 44px;
+      font: inherit;
+      color: var(--text);
+      outline: none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.75);
+    }
+
+    .search-wrap input:focus {
+      border-color: rgba(111, 66, 193, 0.5);
+      box-shadow: 0 0 0 4px rgba(141, 99, 210, 0.12);
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      fill: var(--primary);
+      opacity: 0.95;
+    }
+
+    .count {
+      white-space: nowrap;
+      padding: 12px 16px;
+      border-radius: 16px;
+      background: var(--primary-soft);
+      color: var(--primary-deep);
+      font-weight: 600;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .section-block {
+      margin-top: 28px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding: 0 2px;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 1.08rem;
+      font-weight: 800;
+      color: var(--primary-deep);
+    }
+
+    .section-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      text-decoration: none;
+      color: inherit;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 10px 24px rgba(111, 66, 193, 0.08);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 32px rgba(111, 66, 193, 0.16);
+      border-color: rgba(111, 66, 193, 0.3);
+    }
+
+    .thumb {
+      aspect-ratio: 4 / 5;
+      width: 100%;
+      object-fit: cover;
+      background: linear-gradient(135deg, #f3e8ff, #ffffff);
+      border-bottom: 1px solid rgba(141, 99, 210, 0.12);
+    }
+
+    .card-body {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 14px 14px 16px;
+    }
+
+    .name {
+      margin: 0;
+      font-size: 0.97rem;
+      font-weight: 700;
+      line-height: 1.45;
+      color: var(--text);
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.55;
+    }
+
+    .empty {
+      display: none;
+      margin-top: 22px;
+      padding: 18px 20px;
+      border-radius: 20px;
+      background: var(--panel-strong);
+      border: 1px dashed rgba(141, 99, 210, 0.35);
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .card[hidden] {
+      display: none;
+    }
+
+    .section-block[hidden] {
+      display: none;
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 16px 14px 28px;
+      }
+
+      .hero {
+        padding: 20px 16px;
+        border-radius: 26px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .name {
+        font-size: 0.92rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <h1>วารสารและแหล่งข้อมูลที่เกี่ยวข้องกับการพยาบาล</h1>
+      <p class="subtitle">รวมรายการวารสารที่เกี่ยวข้องกับการพยาบาลเพื่อเปิดดูต่อได้ทันที สามารถค้นหาจากชื่อวารสารภาษาไทยหรือภาษาอังกฤษได้จากช่องค้นหาด้านล่าง</p>
+
+      <div class="toolbar">
+        <label class="search-wrap" for="searchInput" aria-label="ค้นหารายการวารสาร">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M10 2a8 8 0 1 0 4.9 14.3l4.4 4.4 1.4-1.4-4.4-4.4A8 8 0 0 0 10 2Zm0 2a6 6 0 1 1 0 12a6 6 0 0 1 0-12Z"></path>
+          </svg>
+          <input id="searchInput" type="search" placeholder="ค้นหาชื่อวารสาร..." autocomplete="off">
+        </label>
+        <div class="count" id="resultCount">27 รายการ</div>
+      </div>
+
+      <div class="filters" aria-label="ตัวกรองหมวดหมู่">
+        <button class="filter-btn is-active" type="button" data-filter="all">ทั้งหมด</button>
+        <button class="filter-btn" type="button" data-filter="thai">ไทย</button>
+        <button class="filter-btn" type="button" data-filter="inter">ต่างประเทศ</button>
+      </div>
+    </section>
+
+    <section class="section-block" data-section="inter">
+      <div class="section-head">
+        <h2 class="section-title">วารสารต่างประเทศ</h2>
+        <p class="section-note">เรียงตามตัวอักษร</p>
+      </div>
+      <div class="grid">
+        <a class="card" href="https://www.tandfonline.com/loi/hchn20" target="_blank" rel="noopener noreferrer" data-search="journal of community health nursing" data-group="inter">
+          <img class="thumb" src="./Journal-TH_files/Journal-of-Community-Health-Nursing.jpg" alt="Journal of Community Health Nursing" loading="lazy">
+          <div class="card-body">
+            <p class="name">Journal of Community Health Nursing</p>
+            <p class="meta">Journal of Community Health Nursing</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://www.jenonline.org/" target="_blank" rel="noopener noreferrer" data-search="journal of emergency nursing" data-group="inter">
+          <img class="thumb" src="./Journal-TH_files/Journal-of-Emergency-Nursing.jpg" alt="Journal of Emergency Nursing" loading="lazy">
+          <div class="card-body">
+            <p class="name">Journal of Emergency Nursing</p>
+            <p class="meta">Journal of Emergency Nursing</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="section-block" data-section="thai">
+      <div class="section-head">
+        <h2 class="section-title">วารสารไทย</h2>
+        <p class="section-note">เรียงตามตัวอักษร</p>
+      </div>
+      <div class="grid">
+        <a class="card" href="https://he02.tci-thaijo.org/index.php/cmunursing" target="_blank" rel="noopener noreferrer" data-search="พยาบาลสาร มหาวิทยาลัยเชียงใหม่ nursing journal cmu" data-group="thai">
+          <img class="thumb" src="./Journal-TH_files/Nursing-Journal-CMU-cover.png" alt="พยาบาลสาร มหาวิทยาลัยเชียงใหม่" loading="lazy">
+          <div class="card-body">
+            <p class="name">พยาบาลสาร มหาวิทยาลัยเชียงใหม่</p>
+            <p class="meta">Nursing Journal CMU</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he01.tci-thaijo.org/index.php/JNAE/issue/archive#issues" target="_blank" rel="noopener noreferrer" data-search="วารสารการพยาบาลและการศึกษา journal of nursing and education" data-group="thai">
+          <img class="thumb" src="./Journal-TH_files/Journal-of-Nursing-and-Education-สถาบันพนะยรมราชชนก.jpg" alt="วารสารการพยาบาลและการศึกษา" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารการพยาบาลและการศึกษา</p>
+            <p class="meta">Journal of Nursing and Education</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he01.tci-thaijo.org/index.php/jnat-ned" target="_blank" rel="noopener noreferrer" data-search="วารสารการพยาบาลและการดูแลสุขภาพ journal of nursing and therapeutic care" data-group="thai">
+          <img class="thumb" src="./Journal-TH_files/วารสารการพยาบาลและการดูแลสุขภาพ_natne.jpg" alt="วารสารการพยาบาลและการดูแลสุขภาพ" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารการพยาบาลและการดูแลสุขภาพ</p>
+            <p class="meta">Journal of Nursing and Therapeutic Care</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he02.tci-thaijo.org/index.php/JPNMH" target="_blank" rel="noopener noreferrer" data-search="วารสารการพยาบาลจิตเวชและสุขภาพจิต the journal of psychiatric nursing and mental health" data-group="thai">
+          <img class="thumb" src="./Journal-TH_files/Journal-of-Phychiatric-Nursing-and-Mental-Health.jpg" alt="วารสารการพยาบาลจิตเวชและสุขภาพจิต" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารการพยาบาลจิตเวชและสุขภาพจิต</p>
+            <p class="meta">The Journal of Psychiatric Nursing and Mental Health</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he01.tci-thaijo.org/index.php/CUNS/issue/archive" target="_blank" rel="noopener noreferrer" data-search="วารสารการวิจัยทางการพยาบาล นวัตกรรม และสุขภาพ จุฬาลงกรณ์มหาวิทยาลัย journal of nursing research innovation and health" data-group="thai">
+          <img class="thumb" src="./Journal-TH_files/วารสารพยาบาลศาสตร์จุฬา-scaled.jpg" alt="วารสารการวิจัยทางการพยาบาล นวัตกรรม และสุขภาพ จุฬาลงกรณ์มหาวิทยาลัย" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารการวิจัยทางการพยาบาล นวัตกรรม และสุขภาพ จุฬาลงกรณ์มหาวิทยาลัย</p>
+            <p class="meta">Journal of Nursing Research, Innovation, and Health</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he02.tci-thaijo.org/index.php/RNJ" target="_blank" rel="noopener noreferrer" data-search="วารสารวิจัยและนวัตกรรมทางการพยาบาล nursing research and innovation journal" data-group="thai">
+          <img class="thumb" src="./Journal-TH_files/Mahidol-Nursing-Journal_.jpg" alt="วารสารวิจัยและนวัตกรรมทางการพยาบาล" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารวิจัยและนวัตกรรมทางการพยาบาล</p>
+            <p class="meta">Nursing Research and Innovation Journal</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he01.tci-thaijo.org/index.php/bcnpy" target="_blank" rel="noopener noreferrer" data-search="วารสารวิจัยการพยาบาลและสุขภาพ journal of nursing and health research" data-group="thai">
+          <img class="thumb" src="./Journal-TH_files/วารสารวิจัยการพยาบาลและสุขภาพ.jpg" alt="วารสารวิจัยการพยาบาลและสุขภาพ" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารวิจัยการพยาบาลและสุขภาพ</p>
+            <p class="meta">Journal of Nursing and Health Research</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he01.tci-thaijo.org/index.php/scnet" target="_blank" rel="noopener noreferrer" data-search="วารสารเครือข่ายวิทยาลัยพยาบาลและวิทยาลัยการสาธารณสุขภาคใต้ sc-net network journal of nursing and public health" data-group="thai">
+          <img class="thumb" src="./Journal-TH_files/SCNJ.jpg" alt="วารสารเครือข่ายวิทยาลัยพยาบาลและวิทยาลัยการสาธารณสุขภาคใต้" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารเครือข่ายวิทยาลัยพยาบาลและวิทยาลัยการสาธารณสุขภาคใต้ (SC-Net)</p>
+            <p class="meta">Network Journal of Nursing and Public Health</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he02.tci-thaijo.org/index.php/tnaph" target="_blank" rel="noopener noreferrer" data-search="วารสารพยาบาลกระทรวงสาธารณสุข network journal of the ministry of public health" data-group="thai">
+          <img class="thumb" src="./Journal-TH_files/วารสารพยาบาลกระทรวงสาธารณสุข.png" alt="วารสารพยาบาลกระทรวงสาธารณสุข" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารพยาบาลกระทรวงสาธารณสุข</p>
+            <p class="meta">Network Journal of the Ministry of Public Health</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he01.tci-thaijo.org/index.php/policenurse" target="_blank" rel="noopener noreferrer" data-search="วารสารพยาบาลตำรวจ journal of the police nurses and health science" data-group="thai">
+          <img class="thumb" src="./Journal-TH_files/วารสารพยาบาลตำรวจ.jpg" alt="วารสารพยาบาลตำรวจ" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารพยาบาลตำรวจ</p>
+            <p class="meta">Journal of the Police Nurses and Health Science</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he01.tci-thaijo.org/index.php/nah" target="_blank" rel="noopener noreferrer" data-search="วารสารพยาบาลศาสตร์และสุขภาพ มหาวิทยาลัยขอนแก่น journal of nursing science and health" data-group="thai">
+          <img class="thumb" src="./Journal-TH_files/วารสารพยาบาลศาสตร์ขอนแก่น.jpg" alt="วารสารพยาบาลศาสตร์และสุขภาพ มหาวิทยาลัยขอนแก่น" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารพยาบาลศาสตร์และสุขภาพ มหาวิทยาลัยขอนแก่น</p>
+            <p class="meta">Journal of Nursing Science and Health</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he02.tci-thaijo.org/index.php/ns/issue/view/18346" target="_blank" rel="noopener noreferrer" data-search="วารสารพยาบาลศาสตร์ มหาวิทยาลัยมหิดล nursing science journal of thailand" data-group="thai">
+          <img class="thumb" src="./Journal-TH_files/วารสารพยาบาลศาสตร์มหิดล.jpg" alt="วารสารพยาบาลศาสตร์ มหาวิทยาลัยมหิดล" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารพยาบาลศาสตร์ มหาวิทยาลัยมหิดล</p>
+            <p class="meta">Nursing Science Journal of Thailand</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he01.tci-thaijo.org/index.php/nursingsiamjournal" target="_blank" rel="noopener noreferrer" data-search="วารสารพยาบาลศาสตร์ มหาวิทยาลัยสยาม journal of nursing siam university" data-group="thai">
+          <img class="thumb" src="./Journal-TH_files/วารสารพยาบาลศาสตร์มสยาม.jpg" alt="วารสารพยาบาลศาสตร์ มหาวิทยาลัยสยาม" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารพยาบาลศาสตร์ มหาวิทยาลัยสยาม</p>
+            <p class="meta">Journal of Nursing Siam University</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he02.tci-thaijo.org/index.php/trcnj" target="_blank" rel="noopener noreferrer" data-search="วารสารพยาบาลสภากาชาดไทย thai red cross nursing journal" data-group="thai">
+          <img class="thumb" src="./Journal-TH_files/วารสารพยาบาลศาสตร์สภากาชาดไทย.jpg" alt="วารสารพยาบาลสภากาชาดไทย" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารพยาบาลสภากาชาดไทย</p>
+            <p class="meta">Thai Red Cross Nursing Journal</p>
+          </div>
+        </a>
+
+        <a class="card" href="http://www.thaiphn.org/journal/thai/2560/31_4.html" target="_blank" rel="noopener noreferrer" data-search="วารสารพยาบาลสาธารณสุขไทย journal of public health nursing" data-group="thai">
+          <img class="thumb" src="https://nurse.hcu.ac.th/wp-content/uploads/2025/04/%E0%B8%A7%E0%B8%B2%E0%B8%A3%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B8%9E%E0%B8%A2%E0%B8%B2%E0%B8%9A%E0%B8%B2%E0%B8%A5%E0%B8%AA%E0%B8%B2%E0%B8%98%E0%B8%B2%E0%B8%A3%E0%B8%93%E0%B8%AA%E0%B8%B8%E0%B8%82.png" alt="วารสารพยาบาลสาธารณสุขไทย" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารพยาบาลสาธารณสุขไทย</p>
+            <p class="meta">Journal of Public Health Nursing</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he01.tci-thaijo.org/index.php/JRTAN" target="_blank" rel="noopener noreferrer" data-search="วารสารพยาบาลทหารบก journal of the royal thai army nurses" data-group="thai">
+          <img class="thumb" src="./Journal-TH_files/วารสารพยาบาลทหารบก.png" alt="วารสารพยาบาลทหารบก" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารพยาบาลทหารบก</p>
+            <p class="meta">Journal of the Royal Thai Army Nurses</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he02.tci-thaijo.org/index.php/journalthaicvtnurse" target="_blank" rel="noopener noreferrer" data-search="วารสารพยาบาลโรคหัวใจและทรวงอก journal of cardio-thoracic nursing" data-group="thai">
+          <img class="thumb" src="./Journal-TH_files/วารสารพยาบาลโรคหัวใจ.png" alt="วารสารพยาบาลโรคหัวใจและทรวงอก" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารพยาบาลโรคหัวใจและทรวงอก</p>
+            <p class="meta">Journal of Cardio-Thoracic Nursing</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he02.tci-thaijo.org/index.php/TJONC" target="_blank" rel="noopener noreferrer" data-search="วารสารสภาการพยาบาล journal of thailand nursing and midwifery council jtnmc" data-group="thai">
+          <img class="thumb" src="https://nurse.hcu.ac.th/wp-content/uploads/2025/04/%E0%B8%A7%E0%B8%B2%E0%B8%A3%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B8%AA%E0%B8%A0%E0%B8%B2%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%9E%E0%B8%A2%E0%B8%B2%E0%B8%9A%E0%B8%B2%E0%B8%A5.png" alt="วารสารสภาการพยาบาล" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารสภาการพยาบาล</p>
+            <p class="meta">Journal of Thailand Nursing and Midwifery Council (JTNMC)</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he01.tci-thaijo.org/index.php/JPAT" target="_blank" rel="noopener noreferrer" data-search="วารสารสมาคมจิตแพทย์แห่งประเทศไทย the journal of the psychiatric association of thailand" data-group="thai">
+          <img class="thumb" src="https://nurse.hcu.ac.th/wp-content/uploads/2025/04/%E0%B8%A7%E0%B8%B2%E0%B8%A3%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B8%AA%E0%B8%A1%E0%B8%B2%E0%B8%84%E0%B8%A1%E0%B8%88%E0%B8%B4%E0%B8%95%E0%B9%81%E0%B8%9E%E0%B8%97%E0%B8%A2%E0%B9%8C%E0%B9%81%E0%B8%AB%E0%B9%88%E0%B8%87%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%97%E0%B8%A8%E0%B9%84%E0%B8%97%E0%B8%A2.jpg" alt="วารสารสมาคมจิตแพทย์แห่งประเทศไทย" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารสมาคมจิตแพทย์แห่งประเทศไทย</p>
+            <p class="meta">The Journal of the Psychiatric Association of Thailand</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he01.tci-thaijo.org/index.php/jmht" target="_blank" rel="noopener noreferrer" data-search="วารสารสุขภาพจิตแห่งประเทศไทย journal of mental health of thailand" data-group="thai">
+          <img class="thumb" src="https://nurse.hcu.ac.th/wp-content/uploads/2025/04/%E0%B8%A7%E0%B8%B2%E0%B8%A3%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B8%AA%E0%B8%B8%E0%B8%82%E0%B8%A0%E0%B8%B2%E0%B8%9E%E0%B8%88%E0%B8%B4%E0%B8%95%E0%B9%81%E0%B8%AB%E0%B9%88%E0%B8%87%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%97%E0%B8%A8%E0%B9%84%E0%B8%97%E0%B8%A2.jpg" alt="วารสารสุขภาพจิตแห่งประเทศไทย" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารสุขภาพจิตแห่งประเทศไทย</p>
+            <p class="meta">Journal of Mental Health of Thailand</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he01.tci-thaijo.org/index.php/muhed/issue/view/16520" target="_blank" rel="noopener noreferrer" data-search="วารสารสุขศึกษา คณะสาธารณสุขศาสตร์ ม มหิดล" data-group="thai">
+          <img class="thumb" src="https://nurse.hcu.ac.th/wp-content/uploads/2025/04/%E0%B8%A7%E0%B8%B2%E0%B8%A3%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B8%AA%E0%B8%B8%E0%B8%82%E0%B8%A8%E0%B8%B6%E0%B8%81%E0%B8%A9%E0%B8%B2.jpg" alt="วารสารสุขศึกษา" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารสุขศึกษา</p>
+            <p class="meta">คณะสาธารณสุขศาสตร์ ม.มหิดล</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he02.tci-thaijo.org/index.php/Jolbcnm/issue/view/18663" target="_blank" rel="noopener noreferrer" data-search="วารสารสุขภาพและการศึกษาพยาบาล journal of health and nursing education" data-group="thai">
+          <img class="thumb" src="https://nurse.hcu.ac.th/wp-content/uploads/2025/04/%E0%B8%A7%E0%B8%B2%E0%B8%A3%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B8%AA%E0%B8%B8%E0%B8%82%E0%B8%A0%E0%B8%B2%E0%B8%9E%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%A8%E0%B8%B6%E0%B8%81%E0%B8%A9%E0%B8%B2%E0%B8%9E%E0%B8%A2%E0%B8%B2%E0%B8%9A%E0%B8%B2%E0%B8%A5.jpg" alt="วารสารสุขภาพและการศึกษาพยาบาล" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารสุขภาพและการศึกษาพยาบาล</p>
+            <p class="meta">Journal of Health and Nursing Education</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he02.tci-thaijo.org/index.php/TJN" target="_blank" rel="noopener noreferrer" data-search="วารสารพยาบาล thai journal of nursing" data-group="thai">
+          <img class="thumb" src="./Journal-TH_files/Thai-Journal-of-Nursing.png" alt="วารสารพยาบาล" loading="lazy">
+          <div class="card-body">
+            <p class="name">วารสารพยาบาล</p>
+            <p class="meta">Thai Journal of Nursing</p>
+          </div>
+        </a>
+
+        <a class="card" href="https://he02.tci-thaijo.org/index.php/simedbull" target="_blank" rel="noopener noreferrer" data-search="เวชบันทึกศิริราช the siriraj medical bulletin smb" data-group="thai">
+          <img class="thumb" src="https://nurse.hcu.ac.th/wp-content/uploads/2025/04/%E0%B9%80%E0%B8%A7%E0%B8%8A%E0%B8%9A%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%B6%E0%B8%81%E0%B8%A8%E0%B8%B4%E0%B8%A3%E0%B8%B4%E0%B8%A3%E0%B8%B2%E0%B8%8A.jpg" alt="เวชบันทึกศิริราช" loading="lazy">
+          <div class="card-body">
+            <p class="name">เวชบันทึกศิริราช</p>
+            <p class="meta">The Siriraj Medical Bulletin (SMB)</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <div class="empty" id="emptyState">ไม่พบรายการที่ตรงกับคำค้นหา</div>
+  </main>
+
+  <script>
+    const searchInput = document.getElementById("searchInput");
+    const cards = Array.from(document.querySelectorAll(".card"));
+    const resultCount = document.getElementById("resultCount");
+    const emptyState = document.getElementById("emptyState");
+    const sections = Array.from(document.querySelectorAll(".section-block"));
+    const filterButtons = Array.from(document.querySelectorAll(".filter-btn"));
+    let activeFilter = "all";
+
+    function updateFilter() {
+      const keyword = searchInput.value.trim().toLowerCase();
+      let visible = 0;
+
+      cards.forEach((card) => {
+        const haystack = card.dataset.search.toLowerCase();
+        const filterMatched = activeFilter === "all" || card.dataset.group === activeFilter;
+        const searchMatched = keyword === "" || haystack.includes(keyword);
+        const matched = filterMatched && searchMatched;
+        card.hidden = !matched;
+        if (matched) visible += 1;
+      });
+
+      sections.forEach((section) => {
+        const visibleCards = section.querySelectorAll(".card:not([hidden])").length;
+        section.hidden = visibleCards === 0;
+      });
+
+      resultCount.textContent = `${visible} รายการ`;
+      emptyState.style.display = visible === 0 ? "block" : "none";
+    }
+
+    searchInput.addEventListener("input", updateFilter);
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        activeFilter = button.dataset.filter;
+        filterButtons.forEach((item) => item.classList.toggle("is-active", item === button));
+        updateFilter();
+      });
+    });
+  </script>
+</body>
+</html>
